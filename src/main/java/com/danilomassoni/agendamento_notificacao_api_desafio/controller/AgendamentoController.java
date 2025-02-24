@@ -11,6 +11,10 @@ import com.danilomassoni.agendamento_notificacao_api_desafio.controller.dto.in.A
 import com.danilomassoni.agendamento_notificacao_api_desafio.controller.dto.out.AgendamentoRecordOut;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +29,10 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.gravarAgendamento(agendamentoRecord));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AgendamentoRecordOut> buscarAgendamentoPorId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(agendamentoService.buscarAgendamentosPorId(id));
+    }
 
     
 }
