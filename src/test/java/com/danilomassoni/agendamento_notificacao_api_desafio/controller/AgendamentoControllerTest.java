@@ -73,7 +73,7 @@ public class AgendamentoControllerTest {
                 .andExpect(jsonPath("$.emailDestinatario").value("email@email.com"))
                 .andExpect(jsonPath("$.telefoneDestinatario").value(agendamentoRecordOut.telefoneDestinatario()))
                 .andExpect(jsonPath("$.mensagem").value(agendamentoRecordOut.mensagem()))
-                .andExpect(jsonPath("$.dataHoraEnvio").value("asss"))
+                .andExpect(jsonPath("$.dataHoraEnvio").value("02-01-2025 11:01:01"))
                 .andExpect(jsonPath("$.statusNotificacao").value("AGENDADO"));
 
         verify(agendamentoService, times(1)).gravarAgendamento(agendamentoRecord);
