@@ -1,5 +1,7 @@
 package com.danilomassoni.agendamento_notificacao_api_desafio.controller;
 
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -54,15 +56,19 @@ public class AgendamentoControllerTest {
 
     @Test
     void deveCriarAgendamentoComSucesso() throws Exception{
-        when(agendamentoService.gravarAgendamento(AgendamentoRecord)).thenReturn(agendamentoRecordOut);
+        when(agendamentoService.gravarAgendamento(agendamentoRecord)).thenReturn(agendamentoRecordOut);
 
         mockMvc.perform(post("/agendamento")
-            .contentTyype(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsBytes(agendamentoRecord)))
+                .contentTyype(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(agendamentoRecord)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                
+
+
 
     }
 
     
     
 }
-as
