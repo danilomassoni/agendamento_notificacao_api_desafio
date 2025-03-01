@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -52,10 +53,16 @@ public class AgendamentoControllerTest {
     }
 
     @Test
-    void deveCriarAgendamentoComSucesso(){
-        when()
+    void deveCriarAgendamentoComSucesso() throws Exception{
+        when(agendamentoService.gravarAgendamento(AgendamentoRecord)).thenReturn(agendamentoRecordOut);
+
+        mockMvc.perform(post("/agendamento")
+            .contentTyype(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(agendamentoRecord)))
+
     }
 
     
     
 }
+as
