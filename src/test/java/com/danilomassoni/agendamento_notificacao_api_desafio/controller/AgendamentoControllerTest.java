@@ -1,5 +1,7 @@
 package com.danilomassoni.agendamento_notificacao_api_desafio.controller;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -14,6 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+
+
 import com.danilomassoni.agendamento_notificacao_api_desafio.business.AgendamentoService;
 import com.danilomassoni.agendamento_notificacao_api_desafio.controller.dto.in.AgendamentoRecord;
 import com.danilomassoni.agendamento_notificacao_api_desafio.controller.dto.out.AgendamentoRecordOut;
@@ -24,17 +32,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 @ExtendWith(MockitoExtension.class)
 public class AgendamentoControllerTest {
 
-    @InjectMocks
-    AgendamentoController agendamentoController;
+    @Mock
+    private AgendamentoService agendamentoService;
 
-    @Mock 
-    AgendamentoService service;
+    @InjectMocks
+    private AgendamentoController agendamentoController;
 
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper = new ObjectMapper();
-
-    
 
     private AgendamentoRecord agendamentoRecord;
     private AgendamentoRecordOut agendamentoRecordOut;
@@ -56,16 +62,21 @@ public class AgendamentoControllerTest {
 
     @Test
     void deveCriarAgendamentoComSucesso() throws Exception{
+
         when(agendamentoService.gravarAgendamento(agendamentoRecord)).thenReturn(agendamentoRecordOut);
 
         mockMvc.perform(post("/agendamento")
-                .contentTyype(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(agendamentoRecord)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                
+                .andExpect(jsonPath("$.emailDestinatario").value("email@email.com"))
+                .andExpect(jsonPath("$.telefoneDestinatario").value(agendamentoRecordOut.telefoneDestinatario()))
+                .andExpect(jsonPath("$.mensagem").value(agendamentoRecordOut.mensagem()))
+                .andExpect(jsonPath("$.dataHoraEnvio").value("asss"))
+                .andExpect(jsonPath("$.statusNotificacao").value("AGENDADO"));
 
-
+        verify(agendamentoService, times(1)).gravarAgendamento(agendamentoRecord);
 
     }
 
